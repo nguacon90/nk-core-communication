@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        jcenter()
+//        jcenter()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id 'maven-publish'
     id 'java'
+    id 'java-library'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'org.jreleaser' version '1.12.0'
@@ -22,7 +23,7 @@ ext {
 }
 
 group = 'io.github.nguacon90'
-version = '1.0.0'
+version = '1.0.1'
 //
 //tasks.register('javadocJar', Jar) {
 //    from javadoc
@@ -31,17 +32,19 @@ version = '1.0.0'
 //    archiveClassifier.set('javadoc')
 //}
 
-//jar {
-//    archiveBaseName = 'nk-core-communication'
-//    archiveVersion =  '1.0.0'
-//    archiveClassifier.set('')
-//    manifest {
-//        attributes("Implementation-Title": "Gradle", "Implementation-Version": version)
-//    }
-//}
+tasks.register('sourcesJar', Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier.set('sources')
+}
+
+tasks.register('docJar', Jar) {
+    from sourceSets.test.output
+    archiveClassifier.set('javadoc')
+}
+
 shadowJar {
     archiveBaseName = 'nk-core-communication'
-    archiveVersion =  '1.0.0'
+    archiveVersion =  '1.0.1'
     archiveClassifier.set('')
 }
 
@@ -57,14 +60,15 @@ repositories {
 }
 
 configurations.configureEach {
+
 }
 
 dependencies {
-    implementation group: 'org.springframework', name: 'spring-messaging'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure-processor'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream'
+    implementation group: 'org.springframework', name: 'spring-messaging', version: '6.1.6'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream', version: '4.1.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '3.2.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure-processor', version: '3.2.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.2.0'
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '3.1.11'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
@@ -73,8 +77,6 @@ dependencies {
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation group: 'com.google.guava', name: 'guava', version: '23.0'
     implementation group: 'io.zipkin.brave', name: 'brave', version: '6.0.3'
-
-
 
     compileOnly 'org.projectlombok:lombok:1.18.32'
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
@@ -89,18 +91,27 @@ test {
 }
 
 jreleaser {
-    signing {
+    signing(({
         active = 'ALWAYS'
         armored = true
-    }
+        passphrase = 'nk@#2024'
+        mode = 'FILE'
+        publicKey = '/Users/minhtoquang/Documents/public.pgp'
+        secretKey = '/Users/minhtoquang/Documents/private.pgp'
+
+//        publicKey = '38A8BAA50FF50ADF'
+//        secretKey = 'lIYEZmAmqhYJKwYBBAHaRw8BAQdA95BewAeg5y3SkTUrWcrqN/IfbsNNqPkwjIS+O7pZKtb+BwMCJoywHL5aUxv/1k1UFsa7ab4lfY+Wah8OJ1qMdGHnUGd5SOGaq+GK6Z9t3QmCRn6tBvKb1xjLpO6ygBrXz77eVBd44+MU5+ofASakZtAARbQiUXVhbmcgTWluaCA8bmd1YWNvbml0OTBAZ21haWwuY29tPoiZBBMWCgBBFiEEFGiEjwdNMw0mhubwOKi6pQ/1Ct8FAmZgJqoCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQOKi6pQ/1Ct907AEAyar7j1pLOSffmNugjZqcFRuc+dFyc3kWC3+lIYMGBYkA/jPjJCunYKiUPHaq7NXvjEteG4fZekOxTPer7C/EhIkMnIsEZmAmqhIKKwYBBAGXVQEFAQEHQDHsTQ630VnkzI56zA8q8GNjD5JXYRyhflETIEwHOJ87AwEIB/4HAwKIPhRB5nJMvP81Y8rfxZyVVBEFgMjnG+8Sy0n8gtkN4D7xpfzkNgy5P6MOgduvFyhwx9slf9c5WmmooFR9ladcW0rzmYQ2pSMnDeKI7l6NiH4EGBYKACYWIQQUaISPB00zDSaG5vA4qLqlD/UK3wUCZmAmqgIbDAUJBaOagAAKCRA4qLqlD/UK3zN/AP9EkWaBxEzWxc4nhvdep3urLSnc1P8DYZvnlnYQdaW2TwD+KIoR9PZVIUsUFJKE3bWxeJu44hNVf6Cg8p0j4Q5nFgo='
+    } as Closure<Void>))
     deploy {
         maven {
             mavenCentral {
                 app {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
-                    stagingRepository('target/staging-deploy')
+                    stagingRepository('build/staging-deploy')
                     namespace = 'io.github.nguacon90'
+                    username = 'WqdGb90A'
+                    password = 't8DzEbTcWcaDgmYOUE9aklWfIhoCabFUd7aMRMB4elk6'
                 }
             }
         }
@@ -112,9 +123,14 @@ publishing {
         maven(MavenPublication) {
             groupId = 'io.github.nguacon90'
             artifactId = 'nk-core-communication'
-
             from components.java
 
+            afterEvaluate {
+                artifact project.sourcesJar {
+                }
+                artifact project.docJar {
+                }
+            }
             pom {
                 name = 'NK core communication'
                 description = 'NK core communication'
