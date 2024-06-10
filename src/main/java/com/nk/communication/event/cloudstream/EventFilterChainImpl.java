@@ -3,16 +3,15 @@ package com.nk.communication.event.cloudstream;
 import com.nk.communication.event.EnvelopedEvent;
 import com.nk.communication.event.Event;
 import com.nk.communication.event.handler.EventHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessagingException;
 
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 public class EventFilterChainImpl <T extends Event> implements EventFilterChain<T> {
-    private static final Logger log = LoggerFactory.getLogger(EventFilterChainImpl.class);
     private final Iterator<EventMessageFilter> filters;
     private final List<EventHandler<T>> eventHandlers;
 

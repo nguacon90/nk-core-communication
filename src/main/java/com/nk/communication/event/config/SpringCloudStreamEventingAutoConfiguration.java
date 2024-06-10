@@ -18,6 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.sleuth.autoconfig.TraceConfiguration;
 import org.springframework.cloud.stream.binder.Binder;
 import org.springframework.cloud.stream.binder.BinderFactory;
+import org.springframework.cloud.stream.config.BindingServiceConfiguration;
 import org.springframework.cloud.stream.config.BindingServiceProperties;
 import org.springframework.cloud.stream.function.FunctionConfiguration;
 import org.springframework.cloud.stream.messaging.DirectWithAttributesChannel;
@@ -34,7 +35,7 @@ import org.springframework.messaging.converter.CompositeMessageConverter;
         matchIfMissing = true
 )
 @ConditionalOnClass({Binder.class})
-@AutoConfigureAfter({TraceConfiguration.class, JacksonAutoConfiguration.class, FunctionConfiguration.class})
+@AutoConfigureAfter({TraceConfiguration.class, JacksonAutoConfiguration.class, FunctionConfiguration.class, BindingServiceConfiguration.class})
 @Slf4j
 public class SpringCloudStreamEventingAutoConfiguration {
     @Autowired
