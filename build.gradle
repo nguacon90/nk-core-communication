@@ -21,7 +21,7 @@ ext {
 }
 
 group = 'io.github.nguacon90'
-version = '1.0.4'
+version = '1.0.4.1'
 
 tasks.register('sourcesJar', Jar) {
     from sourceSets.main.allSource

@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -18,7 +17,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.sleuth.autoconfig.TraceConfiguration;
 import org.springframework.cloud.stream.binder.Binder;
 import org.springframework.cloud.stream.binder.BinderFactory;
-import org.springframework.cloud.stream.config.BindingServiceConfiguration;
 import org.springframework.cloud.stream.config.BindingServiceProperties;
 import org.springframework.cloud.stream.function.FunctionConfiguration;
 import org.springframework.cloud.stream.messaging.DirectWithAttributesChannel;
@@ -35,13 +33,17 @@ import org.springframework.messaging.converter.CompositeMessageConverter;
         matchIfMissing = true
 )
 @ConditionalOnClass({Binder.class})
-@AutoConfigureAfter({TraceConfiguration.class, JacksonAutoConfiguration.class, FunctionConfiguration.class, BindingServiceConfiguration.class})
+@AutoConfigureAfter({TraceConfiguration.class, JacksonAutoConfiguration.class, FunctionConfiguration.class})
 @Slf4j
 public class SpringCloudStreamEventingAutoConfiguration {
-    @Autowired
-    private BindingServiceProperties bindingServiceProperties;
-    @Autowired
-    private BinderFactory binderFactory;
+    private final BindingServiceProperties bindingServiceProperties;
+    private final BinderFactory binderFactory;
+
+    public SpringCloudStreamEventingAutoConfiguration(BindingServiceProperties bindingServiceProperties,
+                                                      BinderFactory binderFactory) {
+        this.bindingServiceProperties = bindingServiceProperties;
+        this.binderFactory = binderFactory;
+    }
 
     @PostConstruct
     void initBinder() {
@@ -51,7 +53,6 @@ public class SpringCloudStreamEventingAutoConfiguration {
         } catch (NoSuchBeanDefinitionException var3) {
             log.warn("Unable to get binder, set nk.events.enabled=false if events are not required.", var3);
         }
-
     }
 
     @Bean
