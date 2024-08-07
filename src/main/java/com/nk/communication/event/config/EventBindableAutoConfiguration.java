@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.cloud.sleuth.autoconfig.TraceConfiguration;
-import org.springframework.cloud.sleuth.autoconfig.brave.BraveAutoConfiguration;
 import org.springframework.cloud.stream.binder.Binder;
 import org.springframework.cloud.stream.binding.CompositeMessageChannelConfigurer;
 import org.springframework.cloud.stream.config.BindingServiceConfiguration;
@@ -30,7 +28,7 @@ import java.util.List;
 )
 @Configuration
 @ConditionalOnClass({Binder.class})
-@AutoConfigureAfter({BraveAutoConfiguration.class, TraceConfiguration.class, JacksonAutoConfiguration.class})
+@AutoConfigureAfter({JacksonAutoConfiguration.class})
 @AutoConfigureBefore({BindingServiceConfiguration.class})
 public class EventBindableAutoConfiguration {
     public EventBindableAutoConfiguration() {

@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.sleuth.autoconfig.TraceConfiguration;
 import org.springframework.cloud.stream.binder.Binder;
 import org.springframework.cloud.stream.binder.BinderFactory;
 import org.springframework.cloud.stream.config.BindingServiceProperties;
@@ -33,7 +32,7 @@ import org.springframework.messaging.converter.CompositeMessageConverter;
         matchIfMissing = true
 )
 @ConditionalOnClass({Binder.class})
-@AutoConfigureAfter({TraceConfiguration.class, JacksonAutoConfiguration.class, FunctionConfiguration.class})
+@AutoConfigureAfter({JacksonAutoConfiguration.class, FunctionConfiguration.class})
 @Slf4j
 public class SpringCloudStreamEventingAutoConfiguration {
     private final BindingServiceProperties bindingServiceProperties;

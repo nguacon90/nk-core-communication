@@ -21,7 +21,7 @@ ext {
 }
 
 group = 'io.github.nguacon90'
-version = '1.0.4.1'
+version = '1.0.5'
 
 tasks.register('sourcesJar', Jar) {
     from sourceSets.main.allSource
@@ -52,7 +52,6 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-messaging', version: '6.1.6'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream', version: '4.1.0'
 
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '3.1.11'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
     implementation 'org.apache.commons:commons-lang3:3.14.0'
     implementation 'commons-collections:commons-collections:3.2.2'
